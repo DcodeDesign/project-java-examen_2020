@@ -22,10 +22,9 @@ public class KeyActions {
             if(!letterType.matches(regexAcceped))
             {
                 e.consume();
-                //System.out.println(e.getKeyChar());
                 message.setForeground(new Color(215, 11, 0));
                 message.setText(" '" + letterType + "' est  un caractère non valide.");
-            }else {
+            } else {
                 message.setForeground(new Color(85, 85, 85));
                 message.setText("Attention seul les Majuscules et les caractères spéciaux sont accepté.");
             }

@@ -24,9 +24,9 @@ public class AppContent {
     private JButton button_reset = new JButton(button_reset_text);
 
     // JLabel button
-    private String label_text = "Attention seul les Majuscules et les caractères spéciaux sont accepté.";
-    Font label_font = new Font("SansSerif", Font.BOLD, 12);
-    private JLabel jLabel = new JLabel(label_text);
+    private String message_text = "Attention seul les Majuscules et les caractères spéciaux sont accepté.";
+    Font message_font = new Font("SansSerif", Font.BOLD, 12);
+    private JLabel message = new JLabel(message_text);
 
     CoderButtonAction btnActions;
     ResetButtonAction resetButtonAction;
@@ -45,12 +45,12 @@ public class AppContent {
         buttonGeneratePanel.setBackground(new Color(64, 64, 64));
 
         // JTextField field
-        jLabel.setFont(label_font);
-        jLabel.setForeground(new Color(85, 85, 85));
-        jLabel.setPreferredSize(new Dimension(450, 20));
-        jLabel.setVerticalAlignment(JLabel.TOP);
-        jLabel.setVerticalTextPosition(JLabel.TOP);
-        textFormPanel.add(jLabel);
+        message.setFont(message_font);
+        message.setForeground(new Color(85, 85, 85));
+        message.setPreferredSize(new Dimension(450, 20));
+        message.setVerticalAlignment(JLabel.TOP);
+        message.setVerticalTextPosition(JLabel.TOP);
+        textFormPanel.add(message);
 
         // JTextField field
         field.setEditable(field_editable);
@@ -76,7 +76,12 @@ public class AppContent {
             new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    new CoderButtonAction(e, field, buttonGeneratePanel, window, button_reset);
+                    if(field.getText().isEmpty()){
+                        message.setForeground(new Color(215, 11, 0));
+                        message.setText("Attention le champs est vide.");
+                    } else {
+                        new CoderButtonAction(e, field, buttonGeneratePanel, window, button_reset);
+                    }
                 }
             }
         );
@@ -96,7 +101,7 @@ public class AppContent {
             new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent e) {
-                    new KeyActions(e, field, jLabel);
+                    new KeyActions(e, field, message);
                 }
             }
         );
