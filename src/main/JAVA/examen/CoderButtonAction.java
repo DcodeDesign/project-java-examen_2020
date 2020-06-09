@@ -78,14 +78,15 @@ public class CoderButtonAction {
                 int finalI = i;
                 buttonsGenerate[i].addMouseListener(new java.awt.event.MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
-                        System.out.print(correlationTable.get(0).get(finalI));
                         buttonsGenerate[finalI].setText(correlationTable.get(0).get(finalI));
                         buttonsGenerate[finalI].setBackground(new Color(212, 126, 21));
+                        /*
                         if(!isClicked){
                             isClicked = true;
                         } else {
                             isClicked = false;
                         }
+                         */
                     }
 
                     public void mouseEntered(MouseEvent e) {
@@ -99,16 +100,15 @@ public class CoderButtonAction {
                     }
 
                     public void mouseExited(MouseEvent e) {
-                        if(!isClicked){
+                        /* if(!isClicked){ */
                             for (int k = 0; k < correlationTable.get(0).size(); k++) {
                                 if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
                                     buttonsGenerate[k].setText(correlationTable.get(1).get(finalI));
                                     buttonsGenerate[k].setOpaque(false);
                                 }
                             }
-                        }
+                        /* } */
                     }
-
                 });
             }
 
