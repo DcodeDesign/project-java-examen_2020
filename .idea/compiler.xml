@@ -6,10 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="WORK_JAVA_EX" />
+        <module name="Examen_ThomasG_2020" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="Examen_ThomasG_2020.Examen_.main" target="1.8" />
       <module name="Examen_ThomasG_2020.Examen_.test" target="1.8" />
       <module name="Examen_ThomasG_2020.Examen_ThomasG_.main" target="1.8" />

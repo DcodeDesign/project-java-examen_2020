@@ -9,72 +9,90 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class CoderButtonAction {
+    private final JTextField field;
+    private final JPanel buttonGeneratePanel;
+    private final JFrame window;
+    private final JButton buttonReset;
     private int fieldLengthChar = 0;
 
-    //characters_t_list :
+    //lettersArrayList :
     // liste de tableau contenant uniquement les lettres insérées dans le champs
-    private ArrayList<String> characters_t_list = new ArrayList();
+    private final ArrayList<String> lettersArrayList;
 
-    // t_list :
+    // allCharactersArrayList :
     // liste de tableau contenant tous les caractères insérés dans le champs
-    private ArrayList<String> t_list = new ArrayList();
+    private final ArrayList<String> allCharactersArrayList;
 
-    // second_t_list :
+    // correlationAllCharactersArrayList :
     // liste de tableau de contenant la position des lettre, les espaces, les caractères spéciaux
-    private ArrayList<String> second_t_list = new ArrayList();
+    private final ArrayList<String> correlationAllCharactersArrayList;
 
-    // second_t_list :
-    // liste de tableau bidimentionnel regroupant t_list & second_t_list
-    private ArrayList<ArrayList<String>>  bidimensionalArrayList = new ArrayList();
+    // correlationAllCharactersArrayList :
+    // liste de tableau bidimentionnel regroupant allCharactersArrayList & correlationAllCharactersArrayList
+    private final ArrayList<ArrayList<String>> bidimensionalArrayList;
 
-    private Font button_font = new Font("SansSerif", Font.BOLD, 12);
-    private JButton[] button_generate;
-    private String regexLetter = "[A-Z]";
-    private String regexSpecial = "[A-Za-z0-9- ]";
-    private String regexSpace = "[ ]";
+    private final Font buttonFont;
+    // System.out.println(test);
 
-    public CoderButtonAction(ActionEvent e, JTextField field, JPanel buttonGeneratePanel, JFrame window, JButton button_reset) {
-        coder_action(e, field, buttonGeneratePanel, window, button_reset);
+    // génération des boutons
+    private final JButton[] buttonsGenerate = new JButton[fieldLengthChar];
+
+    // regex
+    private final String regexLetter;
+    private final String regexSpecial;
+    private final String regexSpace;
+
+    public CoderButtonAction(JTextField field, JPanel buttonGeneratePanel, JFrame window, JButton buttonReset) {
+        this.field = field;
+        this.buttonGeneratePanel = buttonGeneratePanel;
+        this.window = window;
+        this.buttonReset = buttonReset;
+        lettersArrayList = new ArrayList<>();
+        allCharactersArrayList = new ArrayList<>();
+        correlationAllCharactersArrayList = new ArrayList<>();
+        bidimensionalArrayList = new ArrayList<>();
+        buttonFont = new Font("SansSerif", Font.BOLD, 12);
+        regexLetter = "[A-Z]";
+        regexSpecial = "[A-Za-z0-9- ]";
+        regexSpace = "[ ]";
     }
 
-    private void coder_action(ActionEvent e, JTextField t, JPanel buttonGeneratePanel, JFrame  window, JButton button_reset) {
+    public void coderAction(ActionEvent e) {
         window.setSize(500, 410);
         window.setLocationRelativeTo(null);
 
-        t.setEditable(false);
+        field.setEditable(false);
 
-        ArrayList<ArrayList<String>> correlation_table = new ArrayList(matchArrayGenerator(t));
-        // System.out.println(test);
+        ArrayList<ArrayList<String>> correlationTable;
+        correlationTable = new ArrayList<>(matchArrayGenerator(field));
 
-        // génération des boutons
-        button_generate = new JButton[fieldLengthChar];
-        for (int i = 0; i < correlation_table.get(0).size(); i++) {
+        for (int i = 0; i < correlationTable.get(0).size(); i++) {
 
             // Generation des boutons Lettre
-            if(correlation_table.get(0).get(i).matches(regexLetter)){
-                button_generate[i] = new JButton(correlation_table.get(1).get(i));
-                button_generate[i].setPreferredSize(new Dimension(45, 45));
-                button_generate[i].setFont(button_font);
-                button_generate[i].setForeground(new Color(85, 85, 85));
-                buttonGeneratePanel.add(button_generate[i]);
+            if(correlationTable.get(0).get(i).matches(regexLetter)){
+                buttonsGenerate[i] = new JButton(correlationTable.get(1).get(i));
+                buttonsGenerate[i].setPreferredSize(new Dimension(45, 45));
+                buttonsGenerate[i].setFont(buttonFont);
+                buttonsGenerate[i].setForeground(new Color(85, 85, 85));
+                buttonGeneratePanel.add(buttonsGenerate[i]);
                 int finalI = i;
 
-                button_generate[i].addMouseListener(new java.awt.event.MouseAdapter() {
+                buttonsGenerate[i].addMouseListener(new java.awt.event.MouseAdapter() {
                     public void mouseEntered(MouseEvent e) {
-                        for (int k = 0; k < correlation_table.get(0).size(); k++) {
-                            if(correlation_table.get(0).get(finalI).equals(correlation_table.get(0).get(k))) {
-                                button_generate[k].setBackground(new Color(21, 139, 212));
-                                button_generate[k].setText(correlation_table.get(0).get(finalI));
-                                button_generate[k].setOpaque(true);
+                        for (int k = 0; k < correlationTable.get(0).size(); k++) {
+                            if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
+                                buttonsGenerate[k].setBackground(new Color(21, 139, 212));
+                                buttonsGenerate[k].setText(correlationTable.get(0).get(finalI));
+                                buttonsGenerate[k].setOpaque(true);
                             }
                         }
                     }
 
                     public void mouseExited(MouseEvent e) {
-                        for (int k = 0; k < correlation_table.get(0).size(); k++) {
-                            if(correlation_table.get(0).get(finalI).equals(correlation_table.get(0).get(k))) {
-                                button_generate[k].setText(correlation_table.get(1).get(finalI));
-                                button_generate[k].setOpaque(false);
+                        for (int k = 0; k < correlationTable.get(0).size(); k++) {
+                            if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
+                                buttonsGenerate[k].setText(correlationTable.get(1).get(finalI));
+                                buttonsGenerate[k].setOpaque(false);
                             }
                         }
                     }
@@ -83,84 +101,83 @@ public class CoderButtonAction {
             }
 
             // Generation des boutons de caractère spéciaux
-            if(!correlation_table.get(0).get(i).matches(regexSpecial)){
-                button_generate[i] = new JButton(correlation_table.get(0).get(i));
-                button_generate[i].setPreferredSize(new Dimension(45, 45));
-                button_generate[i].setEnabled(false);
-                buttonGeneratePanel.add(button_generate[i]);
+            if(!correlationTable.get(0).get(i).matches(regexSpecial)){
+                buttonsGenerate[i] = new JButton(correlationTable.get(0).get(i));
+                buttonsGenerate[i].setPreferredSize(new Dimension(45, 45));
+                buttonsGenerate[i].setEnabled(false);
+                buttonGeneratePanel.add(buttonsGenerate[i]);
             }
 
             // Generation des boutons espace
-            if(correlation_table.get(0).get(i).matches(regexSpace)){
-                button_generate[i] = new JButton(correlation_table.get(0).get(i));
-                button_generate[i].setPreferredSize(new Dimension(60, 28));
-                buttonGeneratePanel.add(button_generate[i]);
+            if(correlationTable.get(0).get(i).matches(regexSpace)){
+                buttonsGenerate[i] = new JButton(correlationTable.get(0).get(i));
+                buttonsGenerate[i].setPreferredSize(new Dimension(60, 28));
+                buttonGeneratePanel.add(buttonsGenerate[i]);
             }
         }
 
         // switch bouton
-        JButton button_coder = ((JButton) e.getSource());
-        button_coder.setVisible(false);
-        button_reset.setVisible(true);
+        JButton buttonCoder = ((JButton) e.getSource());
+        buttonCoder.setVisible(false);
+        buttonReset.setVisible(true);
     }
 
-    private ArrayList<ArrayList<String>> matchArrayGenerator(JTextField field) {
+    private ArrayList<ArrayList<String>> matchArrayGenerator(JTextField fieldText) {
 
         // Récupération du text inséré dans la champs
-        String t_text = field.getText();
+        String t_text = fieldText.getText();
 
         // Comptage du nombre de lettre du champs récupéré
         fieldLengthChar = t_text.length();
 
         // Insertion de chaque caractère dans deux arraylist
         for (int i = 0; i <= fieldLengthChar - 1; i++) {
-            t_list.add(t_text.substring(i, i + 1));
-            second_t_list.add(t_text.substring(i, i + 1));
+            allCharactersArrayList.add(t_text.substring(i, i + 1));
+            correlationAllCharactersArrayList.add(t_text.substring(i, i + 1));
         }
 
         // Insertion uniquement des lettres dans une nouvelle arraylist
         for (int i = 0; i < fieldLengthChar; i++) {
-            String letter = String.valueOf(t_list.get(i));
+            String letter = String.valueOf(allCharactersArrayList.get(i));
             if (letter.matches(regexLetter)) {
-                //characters_t_list.add(t_list.get(i));
-                characters_t_list.add(t_list.get(i).toUpperCase());
+                //lettersArrayList.add(allCharactersArrayList.get(i));
+                lettersArrayList.add(allCharactersArrayList.get(i).toUpperCase());
             }
         }
 
-        // characters_t_list : supprime les lettres en double tout en gardant l'ordre initiale
-        Set set = new LinkedHashSet();
-        set.addAll(characters_t_list);
-        ArrayList<String> clean_temp_t_list = new ArrayList<String>(set);
-        clean_temp_t_list.clear();
-        clean_temp_t_list.addAll(set);
+        // lettersArrayList : supprime les lettres en double tout en gardant l'ordre initiale
+        Set<String> set = new LinkedHashSet<>(lettersArrayList);
+        ArrayList<String> clean_temp_allCharactersArrayList = new ArrayList<>(set);
+        clean_temp_allCharactersArrayList.clear();
+        clean_temp_allCharactersArrayList.addAll(set);
 
-        // Comparaison second_t_list avec characters_t_list
+        // Comparaison correlationAllCharactersArrayList avec lettersArrayList
         // pour y inserer la position des lettres
-        for (int i = 0; i < second_t_list.size(); i++) {
+        for (int i = 0; i < correlationAllCharactersArrayList.size(); i++) {
             boolean flag = true;
-            int l = 0;
-            for (l = 0; l < clean_temp_t_list.size() && flag; l++) {
+            int l;
+            for (l = 0; (l < clean_temp_allCharactersArrayList.size()) && flag; l++) {
 
-                if(second_t_list.get(i).equals(clean_temp_t_list.get(l))) {
-                    second_t_list.set(i, String.valueOf(clean_temp_t_list.indexOf(clean_temp_t_list.get(l)) + 1));
+                if(correlationAllCharactersArrayList.get(i).equals(clean_temp_allCharactersArrayList.get(l))) {
+                    correlationAllCharactersArrayList.set(i, String.valueOf(clean_temp_allCharactersArrayList.indexOf(clean_temp_allCharactersArrayList.get(l)) + 1));
                     flag = false;
                 }
 
-                String letter = String.valueOf(t_list.get(i));
+                String letter = String.valueOf(allCharactersArrayList.get(i));
                 if(!letter.matches(regexSpecial)) {
-                    second_t_list.set(i , "Special");
+                    correlationAllCharactersArrayList.set(i , "Special");
                     flag = false;
                 }
 
-                if(second_t_list.get(i).equals(" ")) {
-                    second_t_list.set(i , "Espace");
+                if(correlationAllCharactersArrayList.get(i).equals(" ")) {
+                    correlationAllCharactersArrayList.set(i , "Espace");
                     flag = false;
                 }
             }
         }
 
-        bidimensionalArrayList.add(t_list);
-        bidimensionalArrayList.add(second_t_list);
+        bidimensionalArrayList.add(allCharactersArrayList);
+        bidimensionalArrayList.add(correlationAllCharactersArrayList);
 
         return  bidimensionalArrayList;
     }

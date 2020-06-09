@@ -2,20 +2,26 @@ package examen;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ResetButtonAction {
-    public ResetButtonAction(ActionEvent e, JTextField field, JPanel buttonGeneratePanel, JButton button_coder) {
-        reset_button(e, field, buttonGeneratePanel, button_coder);
+    private final JTextField field;
+    private final JPanel buttonGeneratePanel;
+    private final JButton buttonCoder;
+    private ActionEvent e;
+
+    public ResetButtonAction(JTextField field, JPanel buttonGeneratePanel, JButton buttonCoder) {
+        this.field = field;
+        this.buttonGeneratePanel = buttonGeneratePanel;
+        this.buttonCoder = buttonCoder;
     }
 
-    private void reset_button(ActionEvent e, JTextField field, JPanel buttonGeneratePanel, JButton button_coder) {
-        JButton button_reset = ((JButton) e.getSource());
+    public void resetButton(ActionEvent e) {
+        this.e = e;
+        JButton buttonReset = ((JButton) e.getSource());
         buttonGeneratePanel.removeAll();
         buttonGeneratePanel.repaint();
         field.setEditable(true);
-        button_reset.setVisible(false);
-        button_coder.setVisible(true);
-
+        buttonReset.setVisible(false);
+        buttonCoder.setVisible(true);
     }
 }

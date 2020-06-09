@@ -6,16 +6,20 @@ import java.awt.event.KeyEvent;
 
 public class KeyActions {
 
-    String regexAcceped = "[^0-9a-z]";
+    private final String regexAcceped;
+    private final JTextField field;
+    private final JLabel message;
 
-    public KeyActions (KeyEvent e, JTextField field, JLabel message) {
-        checkFiled(e, field, message);
+    public KeyActions (JTextField field, JLabel message) {
+        this.field = field;
+        this.message = message;
+        regexAcceped = "[^0-9a-z]";
     }
 
-    public void checkFiled (KeyEvent e, JTextField field, JLabel message) {
+    public void checkField (KeyEvent e) {
         String letterType = String.valueOf(e.getKeyChar());
 
-        if (field.isEditable() == false) {
+        if (!field.isEditable()) {
             message.setForeground(new Color(85, 85, 85));
             message.setText("Pour éditer ce champs veiller cliquer sur Reset.");
         }else{
