@@ -6,8 +6,7 @@ import java.awt.event.ActionEvent;
 public class ResetButtonAction {
     private final JTextField field;
     private final JPanel buttonGeneratePanel;
-    private final JButton buttonCoder;
-    private ActionEvent e;
+    private JButton buttonCoder;
 
     public ResetButtonAction(JTextField field, JPanel buttonGeneratePanel, JButton buttonCoder) {
         this.field = field;
@@ -16,7 +15,6 @@ public class ResetButtonAction {
     }
 
     public void resetButton(ActionEvent e) {
-        this.e = e;
         JButton buttonReset = ((JButton) e.getSource());
         buttonGeneratePanel.removeAll();
         buttonGeneratePanel.repaint();

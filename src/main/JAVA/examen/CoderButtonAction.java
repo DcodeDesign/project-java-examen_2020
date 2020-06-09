@@ -13,34 +13,34 @@ public class CoderButtonAction {
     private final JPanel buttonGeneratePanel;
     private final JFrame window;
     private final JButton buttonReset;
-    private int fieldLengthChar = 0;
+    private int fieldLengthChar;
 
     //lettersArrayList :
     // liste de tableau contenant uniquement les lettres insérées dans le champs
-    private final ArrayList<String> lettersArrayList;
+    private ArrayList<String> lettersArrayList;
 
     // allCharactersArrayList :
     // liste de tableau contenant tous les caractères insérés dans le champs
-    private final ArrayList<String> allCharactersArrayList;
+    private ArrayList<String> allCharactersArrayList;
 
     // correlationAllCharactersArrayList :
     // liste de tableau de contenant la position des lettre, les espaces, les caractères spéciaux
-    private final ArrayList<String> correlationAllCharactersArrayList;
+    private ArrayList<String> correlationAllCharactersArrayList;
 
     // correlationAllCharactersArrayList :
     // liste de tableau bidimentionnel regroupant allCharactersArrayList & correlationAllCharactersArrayList
-    private final ArrayList<ArrayList<String>> bidimensionalArrayList;
+    private ArrayList<ArrayList<String>> bidimensionalArrayList;
 
     private final Font buttonFont;
     // System.out.println(test);
-
-    // génération des boutons
-    private final JButton[] buttonsGenerate = new JButton[fieldLengthChar];
 
     // regex
     private final String regexLetter;
     private final String regexSpecial;
     private final String regexSpace;
+
+
+    private boolean isClicked;
 
     public CoderButtonAction(JTextField field, JPanel buttonGeneratePanel, JFrame window, JButton buttonReset) {
         this.field = field;
@@ -66,8 +66,8 @@ public class CoderButtonAction {
         ArrayList<ArrayList<String>> correlationTable;
         correlationTable = new ArrayList<>(matchArrayGenerator(field));
 
+        JButton[] buttonsGenerate = new JButton[fieldLengthChar];
         for (int i = 0; i < correlationTable.get(0).size(); i++) {
-
             // Generation des boutons Lettre
             if(correlationTable.get(0).get(i).matches(regexLetter)){
                 buttonsGenerate[i] = new JButton(correlationTable.get(1).get(i));
@@ -76,8 +76,18 @@ public class CoderButtonAction {
                 buttonsGenerate[i].setForeground(new Color(85, 85, 85));
                 buttonGeneratePanel.add(buttonsGenerate[i]);
                 int finalI = i;
-
                 buttonsGenerate[i].addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        System.out.print(correlationTable.get(0).get(finalI));
+                        buttonsGenerate[finalI].setText(correlationTable.get(0).get(finalI));
+                        buttonsGenerate[finalI].setBackground(new Color(212, 126, 21));
+                        if(!isClicked){
+                            isClicked = true;
+                        } else {
+                            isClicked = false;
+                        }
+                    }
+
                     public void mouseEntered(MouseEvent e) {
                         for (int k = 0; k < correlationTable.get(0).size(); k++) {
                             if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
@@ -89,10 +99,12 @@ public class CoderButtonAction {
                     }
 
                     public void mouseExited(MouseEvent e) {
-                        for (int k = 0; k < correlationTable.get(0).size(); k++) {
-                            if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
-                                buttonsGenerate[k].setText(correlationTable.get(1).get(finalI));
-                                buttonsGenerate[k].setOpaque(false);
+                        if(!isClicked){
+                            for (int k = 0; k < correlationTable.get(0).size(); k++) {
+                                if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
+                                    buttonsGenerate[k].setText(correlationTable.get(1).get(finalI));
+                                    buttonsGenerate[k].setOpaque(false);
+                                }
                             }
                         }
                     }
@@ -123,6 +135,10 @@ public class CoderButtonAction {
     }
 
     private ArrayList<ArrayList<String>> matchArrayGenerator(JTextField fieldText) {
+        lettersArrayList.clear();
+        allCharactersArrayList.clear();
+        correlationAllCharactersArrayList.clear();
+        bidimensionalArrayList.clear();
 
         // Récupération du text inséré dans la champs
         String t_text = fieldText.getText();

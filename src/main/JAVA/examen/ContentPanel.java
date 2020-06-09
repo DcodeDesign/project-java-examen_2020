@@ -9,8 +9,8 @@ import java.awt.event.*;
 public class ContentPanel {
 
     // JTextField field
-    private final String fieldText = "";
-    private final JTextField field = new JTextField(fieldText);
+    private String fieldText = "";
+    private JTextField field = new JTextField(fieldText);
 
     // JButton button Coder
     private final String buttonCoder_text = "Coder";
@@ -27,27 +27,12 @@ public class ContentPanel {
     private final JPanel textFormPanel;
     private final JPanel buttonGeneratePanel;
 
-    private CoderButtonAction coderButtonAction;
-    private ResetButtonAction resetButtonAction;
-    private KeyActions keyActions;
-
     public ContentPanel(JFrame window, JPanel textFormPanel, JPanel buttonGeneratePanel) {
         this.window = window;
         this.textFormPanel = textFormPanel;
         this.buttonGeneratePanel = buttonGeneratePanel;
     }
 
-    public void setCoderButtonAction(CoderButtonAction coderButtonAction) {
-        this.coderButtonAction = coderButtonAction;
-    }
-
-    public void setResetButtonAction(ResetButtonAction resetButtonAction) {
-        this.resetButtonAction = resetButtonAction;
-    }
-
-    public void setKeyActions(KeyActions keyActions) {
-        this.keyActions = keyActions;
-    }
     public void content() {
         // JPanel textFormPanel
         textFormPanel.setLayout(new FlowLayout());
@@ -89,9 +74,9 @@ public class ContentPanel {
         buttonReset.setVisible(false);
         textFormPanel.add(buttonReset);
 
-        new CoderButtonAction(field, buttonGeneratePanel, window, buttonReset);
-        new ResetButtonAction(field, buttonGeneratePanel, buttonReset);
-        new KeyActions(field, message);
+        CoderButtonAction coderButtonAction = new CoderButtonAction(field, buttonGeneratePanel, window, buttonReset);
+        ResetButtonAction resetButtonAction = new ResetButtonAction(field, buttonGeneratePanel, buttonCoder);
+        KeyActions keyActions = new KeyActions(field, message);
 
         // Action du bouton Coder
         buttonCoder.addActionListener(
@@ -112,8 +97,8 @@ public class ContentPanel {
         buttonReset.addActionListener(
                 new ActionListener() {
                     @Override
-                    public void actionPerformed(ActionEvent e) {
-                        resetButtonAction.resetButton(e);
+                    public void actionPerformed(ActionEvent f) {
+                        resetButtonAction.resetButton(f);
                     }
                 }
         );
@@ -122,10 +107,12 @@ public class ContentPanel {
         field.addKeyListener(
                 new KeyAdapter() {
                     @Override
-                    public void keyTyped(KeyEvent e) {
-                        keyActions.checkField(e);
+                    public void keyTyped(KeyEvent k) {
+                        keyActions.checkField(k);
                     }
                 }
         );
+
+
     }
 }

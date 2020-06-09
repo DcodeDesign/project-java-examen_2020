@@ -7,8 +7,9 @@ import java.awt.event.KeyEvent;
 public class KeyActions {
 
     private final String regexAcceped;
-    private final JTextField field;
+    private  JTextField field;
     private final JLabel message;
+    private KeyEvent e;
 
     public KeyActions (JTextField field, JLabel message) {
         this.field = field;
