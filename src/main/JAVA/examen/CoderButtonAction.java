@@ -31,16 +31,17 @@ public class CoderButtonAction {
     // liste de tableau bidimentionnel regroupant allCharactersArrayList & correlationAllCharactersArrayList
     private ArrayList<ArrayList<String>> bidimensionalArrayList;
 
+    private ArrayList<Boolean> buttonClicked;
+
     private final Font buttonFont;
-    // System.out.println(test);
 
     // regex
     private final String regexLetter;
     private final String regexSpecial;
     private final String regexSpace;
 
-
-    private boolean isClicked;
+    Color orange;
+    Color blue;
 
     public CoderButtonAction(JTextField field, JPanel buttonGeneratePanel, JFrame window, JButton buttonReset) {
         this.field = field;
@@ -51,23 +52,27 @@ public class CoderButtonAction {
         allCharactersArrayList = new ArrayList<>();
         correlationAllCharactersArrayList = new ArrayList<>();
         bidimensionalArrayList = new ArrayList<>();
-        buttonFont = new Font("SansSerif", Font.BOLD, 12);
+        buttonClicked = new ArrayList<>();
+
+        buttonFont = new Font("SansSerif", Font.BOLD, 16);
         regexLetter = "[A-Z]";
         regexSpecial = "[A-Za-z0-9- ]";
         regexSpace = "[ ]";
+
+        orange = new Color(212, 126, 21);
+        blue = new Color(21, 139, 212);
     }
 
     public void coderAction(ActionEvent e) {
         window.setSize(500, 410);
         window.setLocationRelativeTo(null);
-
         field.setEditable(false);
-
         ArrayList<ArrayList<String>> correlationTable;
         correlationTable = new ArrayList<>(matchArrayGenerator(field));
-
+        buttonClicked.clear();
         JButton[] buttonsGenerate = new JButton[fieldLengthChar];
         for (int i = 0; i < correlationTable.get(0).size(); i++) {
+            buttonClicked.add(false);
             // Generation des boutons Lettre
             if(correlationTable.get(0).get(i).matches(regexLetter)){
                 buttonsGenerate[i] = new JButton(correlationTable.get(1).get(i));
@@ -78,21 +83,25 @@ public class CoderButtonAction {
                 int finalI = i;
                 buttonsGenerate[i].addMouseListener(new java.awt.event.MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
-                        buttonsGenerate[finalI].setText(correlationTable.get(0).get(finalI));
-                        buttonsGenerate[finalI].setBackground(new Color(212, 126, 21));
-                        /*
-                        if(!isClicked){
-                            isClicked = true;
-                        } else {
-                            isClicked = false;
+
+                        for (int k = 0; k < correlationTable.get(0).size(); k++) {
+                            if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
+                                buttonsGenerate[k].setText(correlationTable.get(0).get(finalI));
+                                buttonsGenerate[k].setBackground(orange);
+                                buttonsGenerate[k].setOpaque(true);
+                                if (buttonClicked.get(k)) {
+                                    buttonClicked.set(k , false);
+                                } else {
+                                    buttonClicked.set(k , true);
+                                }
+                            }
                         }
-                         */
                     }
 
                     public void mouseEntered(MouseEvent e) {
                         for (int k = 0; k < correlationTable.get(0).size(); k++) {
                             if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
-                                buttonsGenerate[k].setBackground(new Color(21, 139, 212));
+                                buttonsGenerate[k].setBackground(blue);
                                 buttonsGenerate[k].setText(correlationTable.get(0).get(finalI));
                                 buttonsGenerate[k].setOpaque(true);
                             }
@@ -100,15 +109,21 @@ public class CoderButtonAction {
                     }
 
                     public void mouseExited(MouseEvent e) {
-                        /* if(!isClicked){ */
-                            for (int k = 0; k < correlationTable.get(0).size(); k++) {
-                                if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
+                        JButton Currentbutton = ((JButton) e.getSource());
+                        for (int k = 0; k < correlationTable.get(0).size(); k++) {
+                            if(correlationTable.get(0).get(finalI).equals(correlationTable.get(0).get(k))) {
+                                if(buttonClicked.get(k)){
+                                    buttonsGenerate[k].setText(correlationTable.get(0).get(finalI));
+                                    buttonsGenerate[k].setBackground(orange);
+                                    buttonsGenerate[k].setOpaque(true);
+                                } else {
                                     buttonsGenerate[k].setText(correlationTable.get(1).get(finalI));
                                     buttonsGenerate[k].setOpaque(false);
                                 }
                             }
-                        /* } */
+                        }
                     }
+
                 });
             }
 
@@ -198,5 +213,3 @@ public class CoderButtonAction {
         return  bidimensionalArrayList;
     }
 }
-
-
